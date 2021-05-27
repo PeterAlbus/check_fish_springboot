@@ -1,0 +1,22 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    username: remote
+    password: shou1951123
+    url: jdbc:mysql://47.117.160.245:3306/?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.peteralbus.domain
+  configuration:
+    map-underscore-to-camel-case: true
+
+#showSql
+logging:
+  level:
+    com:
+      example:
+        mapper : debug
