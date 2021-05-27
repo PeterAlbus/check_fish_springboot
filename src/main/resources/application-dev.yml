@@ -1,7 +1,10 @@
 server:
-  port: 80
+  port: 8081
 
 spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
   datasource:
     username: remote
     password: shou1951123
@@ -20,3 +23,4 @@ logging:
     com:
       example:
         mapper : debug
+

@@ -2,6 +2,8 @@ package com.peteralbus.domain;
 
 import org.apache.ibatis.type.Alias;
 
+import java.util.Date;
+
 @Alias("img")
 public class Img
 {
@@ -12,9 +14,29 @@ public class Img
     private float tarClass;
     private float tarLength;
     private float tarScore;
+    private Date uploadTime;
+
+    public Date getUploadTime() {
+        return uploadTime;
+    }
+
+    public void setUploadTime(Date uploadTime) {
+        this.uploadTime = uploadTime;
+    }
+
+    public Img(Integer id, String imgName, String imgPath, String tarPath, float tarClass, float tarLength, float tarScore) {
+        this.id = id;
+        this.imgName = imgName;
+        this.imgPath = imgPath;
+        this.tarPath = tarPath;
+        this.tarClass = tarClass;
+        this.tarLength = tarLength;
+        this.tarScore = tarScore;
+        this.uploadTime = new Date();
+    }
 
     public Img() {
-
+        this.uploadTime = new Date();
     }
 
     public Integer getId() {
@@ -73,13 +95,4 @@ public class Img
         this.tarScore = tarScore;
     }
 
-    public Img(Integer id, String imgName, String imgPath, String tarPath, float tarClass, float tarLength, float tarScore) {
-        this.id = id;
-        this.imgName = imgName;
-        this.imgPath = imgPath;
-        this.tarPath = tarPath;
-        this.tarClass = tarClass;
-        this.tarLength = tarLength;
-        this.tarScore = tarScore;
-    }
 }
