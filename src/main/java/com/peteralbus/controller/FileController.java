@@ -4,6 +4,10 @@ import com.peteralbus.domain.Img;
 import com.peteralbus.domain.Result;
 import com.peteralbus.service.ImgService;
 import com.peteralbus.service.image_detection.image_detection;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.util.ResourceUtils;
@@ -18,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+@Api(tags = "文件上传")
 @RestController
 @RequestMapping("/file")
 @CrossOrigin
@@ -30,6 +35,8 @@ public class FileController
     private List<String> File_list = null;
 
     // 文件上传 （可以多文件上传）
+    @ApiOperation("文件的上传")
+    @ApiImplicitParams({@ApiImplicitParam(name="file",value = "jpg图片文件",dataType = "MultipartFile",dataTypeClass = MultipartFile.class,required = true,paramType = "form")})
     @PostMapping("/upload")
     public Result fileUploads(HttpServletRequest request, @RequestParam("file") MultipartFile file) throws IOException
     {
@@ -70,27 +77,16 @@ public class FileController
     @GetMapping("/uploadpath")
     private String getUploadPath()
     {
-        System.out.println("getUploadPath()");
         ApplicationHome h = new ApplicationHome(getClass());
         File jarF = h.getSource();
         String path=jarF.getParentFile().toString();
         File file=new File(path+"/upload/","this_is_upload_folder.txt");
         try {
-            file.createNewFile();
+            boolean newFile = file.createNewFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("upload目录未创建");
         }
         //System.out.println(jarF.getParentFile().toString());
         return path+"/upload/";
-/*        File path = null;
-        try {
-            path = new File(ResourceUtils.getURL("classpath:").getPath());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (!path.exists()) path = new File("");
-        File upload = new File(path.getAbsolutePath(), "static/upload/");
-        if (!upload.exists()) upload.mkdirs();
-        return upload.getAbsolutePath();*/
     }
 }

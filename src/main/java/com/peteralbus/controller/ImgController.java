@@ -3,6 +3,8 @@ package com.peteralbus.controller;
 import com.peteralbus.domain.Img;
 import com.peteralbus.domain.Result;
 import com.peteralbus.service.ImgService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@Api(tags = "识别图片数据管理")
 @RestController
 @RequestMapping("/img")
 @CrossOrigin
@@ -19,15 +22,18 @@ public class ImgController
 {
     @Autowired
     private ImgService imgService;
+    @ApiOperation("获取所有识别图片的信息列表")
     @GetMapping("/getimglist")
     public List<Img> getImgList()
     {
         return imgService.findAll();
     }
+    @ApiOperation("获取指定id识别图片的信息")
     @GetMapping("/img/{id}")
     public Img SelectImg(@PathVariable("id") int id){
         return imgService.findByID(id);
     }
+    @ApiOperation("获取所有识别图片（原图片）的路径列表")
     @GetMapping("/getpathlist")
     public List<String> getPathList()
     {
@@ -39,6 +45,7 @@ public class ImgController
         }
         return pathList;
     }
+    @ApiOperation("获取所有识别图片（画框后）的路径列表")
     @GetMapping("/gettarpathlist")
     public List<String> getTarPathList()
     {
@@ -50,14 +57,23 @@ public class ImgController
         }
         return pathList;
     }
+    @ApiOperation("删除指定id的识别图片及其信息")
     @DeleteMapping("/delete/{id}")
     public HashMap<String, Object> DeleteImg(@PathVariable("id") int id){
         Img detection = imgService.findByID(id);
-        File_delete(detection.getImgPath());
-        File_delete(detection.getTarPath());
-        imgService.deleteImg(id);
+        if(File_delete(detection.getImgPath()))
+        {
+            if(File_delete(detection.getTarPath()))
+            {
+                imgService.deleteImg(id);
+                HashMap<String, Object> res_delete = new HashMap<>();
+                Result result = Result.succ(true);
+                res_delete.put("data", result);
+                return res_delete;
+            }
+        }
         HashMap<String, Object> res_delete = new HashMap<>();
-        Result result = Result.succ(true);
+        Result result = Result.fail("删除失败");
         res_delete.put("data", result);
         return res_delete;
     }
@@ -72,6 +88,7 @@ public class ImgController
             return false;
         }
     }
+    @ApiOperation("对指定图片列表调用模型")
     @PostMapping("/call_model")
     public String callModel(@RequestBody Integer[] needCall,HttpServletRequest request)
     {
