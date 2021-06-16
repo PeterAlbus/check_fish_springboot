@@ -11,4 +11,5 @@ public interface ImgService
     public Img findByID(int id);
     public int insertImage(Img img);
     void deleteImg(int id);
+    public List<Img> findImgByTime(String start,String end);
 }

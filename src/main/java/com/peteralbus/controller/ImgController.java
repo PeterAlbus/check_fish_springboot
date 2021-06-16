@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -44,6 +45,18 @@ public class ImgController
             pathList.add(img.getImgPath());
         }
         return pathList;
+    }
+    @ApiOperation("获取上传时间的列表")
+    @GetMapping("/getTimeList")
+    public List<Date> getTimeList()
+    {
+        List<Img> imgList=imgService.findAll();
+        List<Date> timeList = new ArrayList<>();
+        for(Img img:imgList)
+        {
+            timeList.add(img.getUploadTime());
+        }
+        return timeList;
     }
     @ApiOperation("获取所有识别图片（画框后）的路径列表")
     @GetMapping("/gettarpathlist")
@@ -98,5 +111,11 @@ public class ImgController
             System.out.println(integer);
         }
         return "success";
+    }
+    @ApiOperation("获取上传时间在指定区间内的时间")
+    @PostMapping("/getImgByTime")
+    public List<Img> getImgByTime(@RequestParam("sTime") String start,@RequestParam("eTime") String end)
+    {
+        return imgService.findImgByTime(start,end);
     }
 }
